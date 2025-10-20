@@ -12,11 +12,10 @@ import threading
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 if 'RENDER' in os.environ:
-    db_path = os.path.join('/data', 'database.db')
+    db_path = os.path.join('/tmp', 'database.db')
 else:
     instance_path = os.path.join(basedir, 'instance')
-    if not os.path.exists(instance_path):
-        os.makedirs(instance_path)
+    os.makedirs(instance_path, exist_ok=True)
     db_path = os.path.join(instance_path, 'database.db')
 
 app = Flask(__name__)
