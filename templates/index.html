@@ -1,0 +1,137 @@
+<html lang="en">
+<head>
+  <title>DealRelay</title>
+  <link rel="stylesheet" href="/static/main.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Homemade+Apple&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="div_header">
+    <div class="div_header_left">
+      <a href="/">
+        <img id="main_logo" src="/static/source_files/main_logo.png" alt="Amazon Logo">
+      </a>
+    </div>
+    <div class="div_header_middle">
+      <p> - Your personal Amazon price sentinel -  </p>
+    </div>
+    <div class="div_header_right">
+      <a href="https://www.youtube.com" target="_blank">
+        <img id="dev_logo" src="/static/source_files/dev_logo.png" alt="Developer's Page">
+      </a>
+    </div>
+</div>
+
+<div class="div_page">
+  <div class="div_intro">
+    <p> The automated tracker monitors your desired products 24/7 and sends you an instant alert as soon as the price drops. </p>
+  </div>
+
+  <div class="div_how2use">
+    <div class="div_how2use_header">
+      <p id="how2use_header">HOW TO USE?</p>
+    </div>
+
+    <div class="div_how2use_body">
+      <div class="div_url_img">
+          <img id="url_image" src="/static/source_files/instruction.png" alt="Example URL">
+      </div>
+      <div class="div_instructions">
+        <p id="instruction_text">
+          <strong>1- Find Your Product: </strong>Go to any Amazon page and find the item you want to track. <br> <br>
+
+          <strong>2- Copy the Address: </strong> As shown in the image, select and copy the full URL from your browser's address bar. <br>
+          <br>
+
+          <strong>3- Paste and Track: </strong>Paste the link into the input box on our site and enter your e-mail address. <br> <br>
+
+          <strong>4- Relax! </strong> When you click the "Track Price" button, we'll start monitoring the product 24/7. You'll receive an email as soon as the price drops.
+          <br> <br>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="div_arrow_container">
+    <img id="arrow_image" src="/static/source_files/arrow.png">
+  </div>
+
+
+  <div class="div_program">
+    <form id="tracker_form">
+
+      <div class="div_form_group">
+        <label for="user_email">Your E-mail Address:</label>
+        <input type="email" id="user_email" name="user_email" placeholder="example@email.com" required>
+      </div>
+
+      <div class="div_form_group">
+        <label for="product_url">Amazon Product URL:</label>
+        <input type="url" id="product_url" name="product_url" placeholder="https://www.amazon.com/..." required>
+      </div>
+
+      <button type="submit" id="track_button">Track Price</button>
+    </form>
+
+    <div id="response_message"></div>
+  </div>
+
+  <div class="div_outro">
+    <p>
+      Please note: The program currently only supports URLs from Amazon Italy (Amazon.it). <br>
+      Thank you for using <strong>DealRelay</strong>!
+    </p>
+  </div>
+
+</div>
+
+<script>
+      document.getElementById('tracker_form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const url = document.getElementById('product_url').value;
+        const email = document.getElementById('user_email').value;
+        const messageDiv = document.getElementById('response_message');
+        const button = document.querySelector('#track_button');
+
+        button.textContent = 'Tracking...';
+        button.disabled = true;
+        messageDiv.textContent = '';
+
+        try {
+          const response = await fetch('/track', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              product_url: url,
+              user_email: email
+            }),
+          });
+
+          const result = await response.json();
+
+          messageDiv.textContent = result.message;
+          if (response.ok) {
+            messageDiv.style.color = 'green';
+          } else {
+            messageDiv.style.color = 'red';
+          }
+
+        } catch (error) {
+          messageDiv.textContent = 'An error occurred. Please try again.';
+          messageDiv.style.color = 'red';
+        } finally {
+            button.textContent = 'Track Price';
+            button.disabled = false;
+        }
+      });
+    </script>
+
+</body>
+</html>

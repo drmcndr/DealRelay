@@ -1,0 +1,9 @@
+Sanal Ortam
+venv/
+pycache/
+
+Veritabanı
+instance/
+
+IDE Ayarları
+.idea/
