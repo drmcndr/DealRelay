@@ -1,6 +1,6 @@
 from app import app, db
 
-print("Database tables on the creation progress.")
+print("Creating database tables...")
 with app.app_context():
     db.create_all()
-print("Creation progress is successfully done!")
+print("Tables created successfully.")
