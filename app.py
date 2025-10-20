@@ -11,10 +11,16 @@ import threading
 
 # --- Setup ---
 basedir = os.path.abspath(os.path.dirname(__file__))
-app = Flask(__name__)
-instance_path = os.path.join(basedir, 'instance')
+DATA_DIR = '/data/instance'
+if 'RENDER' in os.environ:
+    instance_path = DATA_DIR
+else:
+    instance_path = os.path.join(basedir, 'instance')
+
 if not os.path.exists(instance_path):
     os.makedirs(instance_path)
+
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(instance_path, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
